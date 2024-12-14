@@ -1,0 +1,47 @@
+{
+  // See https://www.typescriptlang.org/tsconfig
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.svelte",
+  ],
+  "compilerOptions": {
+    // Modules
+    "baseUrl": "./",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "types": [
+      "vite/client",
+      "svelte"
+    ],
+
+    // Emit
+    "sourceMap": true,
+
+    // Interop
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    // Language & Environment
+    "target": "esnext",
+    "useDefineForClassFields": true,
+
+    // Completeness
+    "skipLibCheck": true,
+
+    // Type Checking
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true
+  }
+}
