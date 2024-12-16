@@ -456,8 +456,48 @@
       }
 
       .description {
-        :global(a) {
-          color: black !important;
+        margin-block: 20px;
+
+        :global {
+          font-size: 15px;
+
+          h1 {
+            margin-block: 10px;
+            font-size: 20px;
+          }
+
+          h2 {
+            margin-block: 10px;
+            font-size: 18px;
+          }
+
+          h3 {
+            margin-block: 5px;
+            font-size: 16px;
+          }
+
+          h4 {
+            margin-block: 5px;
+            font-size: 16px;
+          }
+
+          h5 {
+            margin-block: 5px;
+            font-size: 16px;
+          }
+
+          h6 {
+            margin-block: 5px;
+            font-size: 16px;
+          }
+
+          ul {
+            padding-left: 25px;
+          }
+
+          a {
+            color: black !important;
+          }
         }
       }
 
