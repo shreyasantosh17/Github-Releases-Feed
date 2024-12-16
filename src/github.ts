@@ -1,9 +1,11 @@
 export const query = `
   query($cursor: String) {
     viewer {
-      starredRepositories(first: 5, after: $cursor) {
+      starredRepositories(first: 5, after: $cursor, orderBy: { field: STARRED_AT, direction: DESC }) {
         totalCount
         pageInfo {
+          startCursor
+          hasPreviousPage
           endCursor
           hasNextPage
         }
@@ -98,6 +100,8 @@ export interface GithubResponse {
     starredRepositories: {
       totalCount: number
       pageInfo: {
+        startCursor: string
+        hasPreviousPage: string
         endCursor: string
         hasNextPage: boolean
       }

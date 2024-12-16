@@ -377,7 +377,8 @@
     left: 50%;
     transform: translate(-50%, 0);
     margin: 0;
-    width: 1000px;
+    width: 100%;
+    max-width: 1000px;
     background-color: #eee;
 
     span {
@@ -389,7 +390,8 @@
   }
 
   #releases {
-    width: 1000px;
+    width: 100%;
+    max-width: 1000px;
     margin: 0 auto;
 
     .release {
