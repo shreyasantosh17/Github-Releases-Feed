@@ -1,7 +1,7 @@
-export const query = `
+export const reposQuery = `
   query($cursor: String) {
     viewer {
-      starredRepositories(first: 5, after: $cursor, orderBy: { field: STARRED_AT, direction: DESC }) {
+      starredRepositories(first: 20, after: $cursor) {
         totalCount
         pageInfo {
           startCursor
@@ -32,7 +32,6 @@ export const query = `
           }
           releases(first: 100, orderBy: { field: CREATED_AT, direction: DESC }) {
             nodes {
-              descriptionHTML
               id
               isDraft
               isPrerelease
@@ -57,8 +56,26 @@ export const query = `
   }
 `
 
+export const descriptionQuery = `
+  query($releaseIds: [ID!]!) {
+    nodes(ids: $releaseIds) {
+      ... on Release {
+        id
+        descriptionHTML
+      }
+    }
+
+    rateLimit {
+      cost
+      limit
+      remaining
+      used
+      resetAt
+    }
+  }
+`
+
 export interface GithubRelease {
-  descriptionHTML: string
   id: string
   isDraft: boolean
   isPrerelease: boolean
@@ -95,7 +112,7 @@ export interface GithubRepository {
   url: string
 }
 
-export interface GithubResponse {
+export interface GithubReposResponse {
   viewer: {
     starredRepositories: {
       totalCount: number
@@ -118,6 +135,22 @@ export interface GithubResponse {
   }
 }
 
+export interface GithubReleaseResponse {
+  nodes: Array<{
+    id: string
+    descriptionHTML: string
+  }>
+
+  rateLimit: {
+    cost: number
+    limit: number
+    remaining: number
+    used: number
+    resetAt: string
+  }
+}
+
 export type ReleaseObj = GithubRelease & {
   repo: Omit<GithubRepository, 'releases'>
+  descriptionHTML?: string
 }

@@ -4,9 +4,16 @@
 
   import { onMount } from 'svelte'
   import { Octokit } from '@octokit/core'
+  import { GraphqlResponseError } from '@octokit/graphql'
   import { RequestError } from '@octokit/request-error'
   import { intlFormatDistance } from 'date-fns'
-  import { query, type GithubResponse, type ReleaseObj } from './github'
+  import {
+    reposQuery,
+    descriptionQuery,
+    type GithubReposResponse,
+    type GithubReleaseResponse,
+    type ReleaseObj,
+  } from './github'
 
   let githubToken: string | null = $state(null)
   let githubTokenInput: HTMLInputElement | undefined = $state()
@@ -54,7 +61,7 @@
     if (!octokit) return
 
     octokit
-      .graphql<GithubResponse | undefined>(query, { cursor })
+      .graphql<GithubReposResponse | undefined>(reposQuery, { cursor })
       .then((response) => {
         if (!response) {
           fetchReleases(cursor)
@@ -71,17 +78,22 @@
           const { releases, ...repo } = repoNode
           const releaseNodes = releases.nodes
 
-          releaseNodes.forEach((releaseNode) => {
-            const publishedAt = new Date(releaseNode.publishedAt)
-            if (publishedAt < startingDate) return
-            allReleases.push({ repo, ...releaseNode })
-          })
+          const releaseObjs = releaseNodes
+            .map((releaseNode) => {
+              const publishedAt = new Date(releaseNode.publishedAt)
+              if (publishedAt < startingDate) return null
+              return { repo, ...releaseNode } as ReleaseObj
+            })
+            .filter((v) => v !== null)
 
+          allReleases.push(...releaseObjs)
           allReleases.sort((a, b) => {
             const date1 = new Date(a.publishedAt).getTime()
             const date2 = new Date(b.publishedAt).getTime()
             return date2 - date1
           })
+
+          void fetchReleaseDescriptions(releaseObjs)
 
           reposProcessed += 1
           progress = reposProcessed / totalCount
@@ -104,13 +116,38 @@
           retries += 1
           console.log(`Retrying Request - Retry #${retries}`)
           fetchReleases(cursor)
+        } else if (error instanceof GraphqlResponseError) {
+          toast = error.response.errors[0].message
         } else if (error instanceof RequestError) {
-          console.log(error.status)
-          console.log(error.message)
-          console.log(error.response)
           toast = error.message
         }
       })
+  }
+
+  async function fetchReleaseDescriptions(
+    releaseObjs: ReleaseObj[],
+  ): Promise<void> {
+    if (!octokit || releaseObjs.length === 0) return
+
+    const releaseIds = releaseObjs.map((releaseObj) => releaseObj.id)
+    const response = await octokit.graphql<GithubReleaseResponse | undefined>(
+      descriptionQuery,
+      { releaseIds },
+    )
+
+    if (!response) return
+
+    response.nodes.forEach((releaseNode) => {
+      const releaseObj = allReleases.find(
+        (release) => release.id === releaseNode.id,
+      )
+
+      if (releaseObj) {
+        releaseObj.descriptionHTML = releaseNode.descriptionHTML
+      }
+    })
+
+    return
   }
 
   onMount(() => {
@@ -205,8 +242,15 @@
         </div>
 
         <div class="description">
-          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-          {@html release.descriptionHTML}
+          {#if release.descriptionHTML !== undefined}
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+            {@html release.descriptionHTML}
+          {:else}
+            <img
+              src="./loading.svg"
+              alt="Loading..."
+            />
+          {/if}
         </div>
 
         <div class="meta">
