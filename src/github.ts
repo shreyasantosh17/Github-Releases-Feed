@@ -37,6 +37,7 @@ export const reposQuery = `
               isPrerelease
               name
               publishedAt
+              updatedAt
               url
             }
           }
@@ -62,6 +63,7 @@ export const descriptionQuery = `
       ... on Release {
         id
         descriptionHTML
+        updatedAt
       }
     }
 
@@ -81,6 +83,7 @@ export interface GithubRelease {
   isPrerelease: boolean
   name: string
   publishedAt: string
+  updatedAt: string
   url: string
 }
 
@@ -139,6 +142,7 @@ export interface GithubReleaseResponse {
   nodes: Array<{
     id: string
     descriptionHTML: string
+    updatedAt: string
   }>
 
   rateLimit: {

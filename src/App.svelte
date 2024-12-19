@@ -7,6 +7,7 @@
   import { GraphqlResponseError } from '@octokit/graphql'
   import { RequestError } from '@octokit/request-error'
   import { intlFormatDistance } from 'date-fns'
+  import { openDB, type DBSchema, type IDBPDatabase } from 'idb'
   import {
     reposQuery,
     descriptionQuery,
@@ -37,6 +38,14 @@
     maximumSignificantDigits: 3,
   })
 
+  let db: IDBPDatabase<GithubReleasesDBSchema> | undefined
+  interface GithubReleasesDBSchema extends DBSchema {
+    descriptions: {
+      key: string
+      value: string
+    }
+  }
+
   function fetchGithubToken(): void {
     githubToken = localStorage.getItem('githubToken')
   }
@@ -55,6 +64,18 @@
   function initOktokit(): void {
     if (githubToken === null) return
     octokit = new Octokit({ auth: githubToken })
+  }
+
+  async function initIndexedDB(): Promise<void> {
+    try {
+      db = await openDB<GithubReleasesDBSchema>('github-releases', 1, {
+        upgrade(idbp) {
+          idbp.createObjectStore('descriptions')
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   function fetchReleases(cursor: string | null = null): void {
@@ -129,28 +150,60 @@
   ): Promise<void> {
     if (!octokit || releaseObjs.length === 0) return
 
-    const releaseIds = releaseObjs.map((releaseObj) => releaseObj.id)
+    const uncachedReleaseIds: string[] = []
+
+    await Promise.all(
+      releaseObjs.map(async (releaseObj) => {
+        const description = db
+          ? await db.get(
+              'descriptions',
+              `${releaseObj.id}-${releaseObj.updatedAt}`,
+            )
+          : undefined
+
+        if (description === undefined) {
+          uncachedReleaseIds.push(releaseObj.id)
+        } else {
+          attachReleaseDescription(releaseObj.id, description)
+        }
+      }),
+    )
+
+    if (uncachedReleaseIds.length === 0) return
+
     const response = await octokit.graphql<GithubReleaseResponse | undefined>(
       descriptionQuery,
-      { releaseIds },
+      { releaseIds: uncachedReleaseIds },
     )
 
     if (!response) return
 
     response.nodes.forEach((releaseNode) => {
-      const releaseObj = allReleases.find(
-        (release) => release.id === releaseNode.id,
+      void db?.put(
+        'descriptions',
+        releaseNode.descriptionHTML,
+        `${releaseNode.id}-${releaseNode.updatedAt}`,
       )
 
-      if (releaseObj) {
-        releaseObj.descriptionHTML = releaseNode.descriptionHTML
-      }
+      attachReleaseDescription(releaseNode.id, releaseNode.descriptionHTML)
     })
 
     return
   }
 
-  onMount(() => {
+  function attachReleaseDescription(
+    releaseId: string,
+    description: string,
+  ): void {
+    const releaseObj = allReleases.find((release) => release.id === releaseId)
+
+    if (releaseObj) {
+      releaseObj.descriptionHTML = description
+    }
+  }
+
+  onMount(async () => {
+    await initIndexedDB()
     fetchGithubToken()
     initOktokit()
     fetchReleases()
@@ -503,6 +556,7 @@
 
       .description {
         margin-block: 20px;
+        overflow-x: scroll;
 
         :global {
           font-size: 15px;
