@@ -7,7 +7,9 @@
 
   let {
     expandDescriptions = $bindable(),
+    // eslint-disable-next-line prefer-const
     logout,
+    // eslint-disable-next-line prefer-const
     githubToken,
   }: Props = $props()
 

@@ -65,7 +65,7 @@
 
     saveGithubToken(inputValue)
     initOktokit()
-    fetchReleases()
+    void fetchReleases()
   }
 
   function logout(): void {
@@ -100,71 +100,79 @@
 
     loading = true
 
-    octokit
-      .graphql<GithubReposResponse | undefined>(reposQuery, { cursor })
-      .then((response) => {
-        // If user logged out while request was in progress, discard the response
-        if (!octokit) return
+    try {
+      const response = await octokit.graphql<GithubReposResponse | undefined>(
+        reposQuery,
+        {
+          cursor,
+        },
+      )
 
-        if (!response) {
-          fetchReleases(cursor)
-          return
-        }
+      if (!response) {
+        console.log('Debug: Graphql response is undefined')
+        void fetchReleases(cursor)
+        return
+      }
 
-        // Reset retries since this request succeeded
-        retries = 0
+      // Reset retries since this request succeeded
+      retries = 0
 
-        const { pageInfo, totalCount, nodes } =
-          response.viewer.starredRepositories
+      handleResponse(response)
+    } catch (error: unknown) {
+      console.log(error)
 
-        nodes.forEach((repoNode) => {
-          const { releases, ...repo } = repoNode
-          const releaseNodes = releases.nodes
+      if (retries < 3) {
+        // Retry the same request up to 3 times
+        retries += 1
+        console.log(`Retrying Request - Retry #${retries}`)
+        void fetchReleases(cursor)
+      } else if (error instanceof GraphqlResponseError) {
+        toast = error.response.errors[0].message
+      } else if (error instanceof RequestError) {
+        toast = error.message
+      }
+    }
+  }
 
-          const releaseObjs = releaseNodes
-            .map((releaseNode) => {
-              const publishedAt = new Date(releaseNode.publishedAt)
-              if (publishedAt < startingDate) return null
-              return { repo, ...releaseNode } as ReleaseObj
-            })
-            .filter((v) => v !== null)
+  function handleResponse(response: GithubReposResponse): void {
+    // If user logged out before handling response, stop processing
+    if (!octokit) return
 
-          allReleases.push(...releaseObjs)
-          allReleases.sort((a, b) => {
-            const date1 = new Date(a.publishedAt).getTime()
-            const date2 = new Date(b.publishedAt).getTime()
-            return date2 - date1
-          })
+    const { pageInfo, totalCount, nodes } = response.viewer.starredRepositories
 
-          void fetchReleaseDescriptions(releaseObjs)
+    nodes.forEach((repoNode) => {
+      const { releases, ...repo } = repoNode
+      const releaseNodes = releases.nodes
 
-          reposProcessed += 1
-          progress = reposProcessed / totalCount
+      const releaseObjs = releaseNodes
+        .map((releaseNode) => {
+          const publishedAt = new Date(releaseNode.publishedAt)
+          if (publishedAt < startingDate) return null
+          return { repo, ...releaseNode } as ReleaseObj
         })
+        .filter((v) => v !== null)
 
-        if (response.rateLimit.remaining <= 0) {
-          toast = 'Error: Reached Github Rate Limit'
-          loading = false
-        } else if (pageInfo.hasNextPage) {
-          fetchReleases(pageInfo.endCursor)
-        } else {
-          loading = false
-        }
+      allReleases.push(...releaseObjs)
+      allReleases.sort((a, b) => {
+        const date1 = new Date(a.publishedAt).getTime()
+        const date2 = new Date(b.publishedAt).getTime()
+        return date2 - date1
       })
-      .catch((error: unknown) => {
-        console.log(error)
 
-        if (retries < 3) {
-          // Retry the same request up to 3 times
-          retries += 1
-          console.log(`Retrying Request - Retry #${retries}`)
-          fetchReleases(cursor)
-        } else if (error instanceof GraphqlResponseError) {
-          toast = error.response.errors[0].message
-        } else if (error instanceof RequestError) {
-          toast = error.message
-        }
-      })
+      void fetchReleaseDescriptions(releaseObjs)
+
+      reposProcessed += 1
+      progress = reposProcessed / totalCount
+    })
+
+    if (response.rateLimit.remaining <= 0) {
+      toast = 'Error: Reached Github Rate Limit'
+      loading = false
+    } else if (pageInfo.hasNextPage) {
+      void fetchReleases(pageInfo.endCursor)
+    } else {
+      loading = false
+    }
   }
 
   async function fetchReleaseDescriptions(
@@ -228,7 +236,7 @@
     await initIndexedDB()
     fetchGithubToken()
     initOktokit()
-    fetchReleases()
+    void fetchReleases()
   })
 </script>
 
