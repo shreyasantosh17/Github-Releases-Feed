@@ -5,10 +5,10 @@
 
   interface Props {
     release: ReleaseObj
-    truncateDescriptions: boolean
+    expandDescriptions: boolean
   }
 
-  const { release, truncateDescriptions }: Props = $props()
+  const { release, expandDescriptions }: Props = $props()
 
   let descriptionDiv = $state<HTMLDivElement>()
   let expandDescriptionDiv = $state<HTMLDivElement>()
@@ -101,7 +101,7 @@
 
   <div
     class="description"
-    class:truncated={truncateDescriptions && oversized}
+    class:truncated={oversized && !expandDescriptions}
     bind:this={descriptionDiv}
   >
     {#if release.descriptionHTML !== undefined}
@@ -115,7 +115,7 @@
     {/if}
   </div>
 
-  {#if truncateDescriptions && oversized}
+  {#if oversized && !expandDescriptions}
     <div
       class="expand_description"
       bind:this={expandDescriptionDiv}

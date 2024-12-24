@@ -23,7 +23,7 @@
 
   let githubToken = $state<string | null>(null)
   let allReleases = $state<ReleaseObj[]>([])
-  let truncateDescriptions = $state(false)
+  let expandDescriptions = $state(false)
   let loading = $state(false)
   let progress = $state(0.0)
   let toast = $state('')
@@ -233,7 +233,7 @@
 </script>
 
 <Settings
-  bind:truncateDescriptions
+  bind:expandDescriptions
   {githubToken}
   {logout}
 />
@@ -246,7 +246,7 @@
 
   <Releases
     {allReleases}
-    {truncateDescriptions}
+    {expandDescriptions}
   />
 {:else}
   <Login {login} />

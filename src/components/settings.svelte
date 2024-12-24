@@ -1,12 +1,12 @@
 <script lang="ts">
   interface Props {
-    truncateDescriptions: boolean
+    expandDescriptions: boolean
     githubToken: string | null
     logout: () => void
   }
 
   let {
-    truncateDescriptions = $bindable(),
+    expandDescriptions = $bindable(),
     logout,
     githubToken,
   }: Props = $props()
@@ -32,9 +32,9 @@
     <div>
       <input
         type="checkbox"
-        bind:checked={truncateDescriptions}
+        bind:checked={expandDescriptions}
       />
-      Truncate Descriptions
+      Expand Descriptions
     </div>
 
     {#if githubToken}
