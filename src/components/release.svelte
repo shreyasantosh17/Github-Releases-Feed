@@ -145,13 +145,20 @@
     border-radius: 7px;
     background-color: #fdfdfd;
     filter: drop-shadow(5px 5px 5px #ccc);
+    line-height: 20px;
+    font-size: 15px;
+    color: #333;
+
+    a {
+      color: #333;
+    }
 
     .pill {
       display: inline-block;
       padding: 4px 10px;
       border-radius: 10px;
-      background-color: #555;
-      color: white;
+      background-color: #333;
+      color: #fff;
       line-height: 13px;
       font-size: 13px;
 
@@ -163,10 +170,6 @@
     }
 
     .info {
-      a {
-        color: black;
-      }
-
       .stars,
       .license {
         float: right;
@@ -185,25 +188,34 @@
       }
 
       .time {
-        margin-top: 5px;
         font-size: 13px;
       }
     }
 
     .name {
-      margin: 20px 0;
-      font-size: 24px;
+      clear: both;
+      margin-block: 16px;
+      line-height: 20px;
+      font-size: 20px;
       font-weight: bold;
 
+      a:visited {
+        color: #570987;
+      }
+
       .status {
-        font-size: 14px;
+        position: relative;
+        top: -4px;
+        left: 5px;
         font-weight: normal;
       }
     }
 
     .description {
-      margin-block: 20px;
+      margin-block: 16px;
+      padding: 16px;
       overflow-x: scroll;
+      background-color: #f6f6f6;
 
       &.truncated {
         position: relative;
@@ -228,33 +240,47 @@
       :global {
         font-size: 15px;
 
+        :first-child {
+          margin-top: 0;
+        }
+
+        :last-child {
+          margin-bottom: 0;
+        }
+
         h1 {
           margin-block: 10px;
+          line-height: 20px;
           font-size: 20px;
         }
 
         h2 {
           margin-block: 10px;
+          line-height: 18px;
           font-size: 18px;
         }
 
         h3 {
           margin-block: 5px;
+          line-height: 16px;
           font-size: 16px;
         }
 
         h4 {
           margin-block: 5px;
+          line-height: 16px;
           font-size: 16px;
         }
 
         h5 {
           margin-block: 5px;
+          line-height: 16px;
           font-size: 16px;
         }
 
         h6 {
           margin-block: 5px;
+          line-height: 16px;
           font-size: 16px;
         }
 
@@ -263,7 +289,7 @@
         }
 
         a {
-          color: black !important;
+          color: #333 !important;
         }
       }
     }
@@ -276,6 +302,7 @@
         background-color: transparent;
         font-size: 15px;
         font-weight: bold;
+        text-decoration: underline;
       }
     }
 
