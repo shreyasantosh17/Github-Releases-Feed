@@ -1,12 +1,14 @@
 <script lang="ts">
   interface Props {
     expandDescriptions: boolean
+    showLanguages: boolean
     githubToken: string | null
     logout: () => void
   }
 
   let {
     expandDescriptions = $bindable(),
+    showLanguages = $bindable(),
     // eslint-disable-next-line prefer-const
     logout,
     // eslint-disable-next-line prefer-const
@@ -32,11 +34,23 @@
 {#if settingsOpen}
   <div id="settings">
     <div>
-      <input
-        type="checkbox"
-        bind:checked={expandDescriptions}
-      />
-      Expand Descriptions
+      <label>
+        <input
+          type="checkbox"
+          bind:checked={expandDescriptions}
+        />
+        Expand Descriptions
+      </label>
+    </div>
+
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          bind:checked={showLanguages}
+        />
+        Show Languages
+      </label>
     </div>
 
     {#if githubToken}

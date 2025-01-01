@@ -24,6 +24,7 @@
   let githubToken = $state<string | null>(null)
   let allReleases = $state<ReleaseObj[]>([])
   let expandDescriptions = $state(false)
+  let showLanguages = $state(false)
   let loading = $state(false)
   let progress = $state(0.0)
   let toast = $state('')
@@ -242,6 +243,7 @@
 
 <Settings
   bind:expandDescriptions
+  bind:showLanguages
   {githubToken}
   {logout}
 />
@@ -255,6 +257,7 @@
   <Releases
     {allReleases}
     {expandDescriptions}
+    {showLanguages}
   />
 {:else}
   <Login {login} />

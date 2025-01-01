@@ -6,9 +6,10 @@
   interface Props {
     release: ReleaseObj
     expandDescriptions: boolean
+    showLanguages: boolean
   }
 
-  const { release, expandDescriptions }: Props = $props()
+  const { release, expandDescriptions, showLanguages }: Props = $props()
 
   let descriptionDiv = $state<HTMLDivElement>()
   let expandDescriptionDiv = $state<HTMLDivElement>()
@@ -124,17 +125,19 @@
     </div>
   {/if}
 
-  <div class="meta">
-    {#each repo.languages.nodes as languageNode}
-      {@const secondary = languageNode.id !== repo.primaryLanguage.id}
-      <div
-        class="pill lang"
-        class:secondary
-      >
-        {languageNode.name}
-      </div>
-    {/each}
-  </div>
+  {#if showLanguages}
+    <div class="meta">
+      {#each repo.languages.nodes as languageNode}
+        {@const secondary = languageNode.id !== repo.primaryLanguage.id}
+        <div
+          class="pill lang"
+          class:secondary
+        >
+          {languageNode.name}
+        </div>
+      {/each}
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -315,6 +318,10 @@
           background-color: #888;
         }
       }
+    }
+
+    :last-child {
+      margin-bottom: 0;
     }
   }
 </style>

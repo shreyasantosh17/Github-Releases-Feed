@@ -6,9 +6,10 @@
   interface Props {
     allReleases: ReleaseObj[]
     expandDescriptions: boolean
+    showLanguages: boolean
   }
 
-  const { allReleases, expandDescriptions }: Props = $props()
+  const { allReleases, expandDescriptions, showLanguages }: Props = $props()
 </script>
 
 <div id="releases">
@@ -16,6 +17,7 @@
     <Release
       {release}
       {expandDescriptions}
+      {showLanguages}
     />
   {/each}
 </div>
