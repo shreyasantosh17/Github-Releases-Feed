@@ -40,25 +40,6 @@
 
 <div class="release">
   <div class="info">
-    <div class="pill stars">
-      <span>&#10025;</span>
-      {starsFormatter.format(repo.stargazerCount)}
-    </div>
-
-    <div class="pill license">
-      <span>&#169;</span>
-
-      {#if licenseInfo}
-        {#if licenseInfo.spdxId === 'NOASSERTION'}
-          Unspecified
-        {:else}
-          {licenseInfo.spdxId}
-        {/if}
-      {:else}
-        Unknown
-      {/if}
-    </div>
-
     <div class="avatar">
       <img
         src={owner.avatarUrl}
@@ -69,13 +50,37 @@
 
     <div class="repo">
       <a
-        href={owner.url}
-        target="_blank">{owner.login}</a
-      >/<a
         href={repo.url}
         target="_blank"
-        title={repo.description}>{repo.name}</a
-      > released
+      >
+        {owner.login}/{repo.name}
+      </a>
+      released
+
+      <div class="tooltip">
+        <p>{repo.description}</p>
+
+        <div class="metrics">
+          <div class="stars">
+            <span>&#10025;</span>
+            {starsFormatter.format(repo.stargazerCount)}
+          </div>
+
+          <div class="license">
+            <span>&#169;</span>
+
+            {#if licenseInfo}
+              {#if licenseInfo.spdxId === 'NOASSERTION'}
+                Unspecified
+              {:else}
+                {licenseInfo.spdxId}
+              {/if}
+            {:else}
+              Unknown
+            {/if}
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="time">
@@ -173,12 +178,6 @@
     }
 
     .info {
-      .stars,
-      .license {
-        float: right;
-        margin-left: 5px;
-      }
-
       .avatar {
         float: left;
         margin-right: 10px;
@@ -187,6 +186,47 @@
           width: 40px;
           height: 40px;
           border-radius: 7px;
+        }
+      }
+
+      .repo {
+        position: relative;
+        margin-left: 50px;
+
+        .tooltip {
+          display: none;
+          position: absolute;
+          z-index: 98;
+          top: 25px;
+          left: 5px;
+          width: 350px;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 7px;
+          background-color: #fdfdfd;
+          filter: drop-shadow(5px 5px 5px #ccc);
+          line-height: 20px;
+          font-size: 14px;
+
+          p {
+            margin-block: 0 10px;
+          }
+
+          .metrics {
+            display: flex;
+            gap: 20px;
+
+            span {
+              font-size: 18px;
+              vertical-align: top;
+            }
+          }
+        }
+
+        a:hover {
+          & + .tooltip {
+            display: block;
+          }
         }
       }
 
