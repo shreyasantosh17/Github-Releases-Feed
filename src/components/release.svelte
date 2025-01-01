@@ -48,58 +48,60 @@
       />
     </div>
 
-    <div class="repo">
-      <a
-        href={repo.url}
-        target="_blank"
-      >
-        {owner.login}/{repo.name}
-      </a>
-      released
+    <div>
+      <div class="repo">
+        <a
+          href={repo.url}
+          target="_blank"
+        >
+          {owner.login}/{repo.name}
+        </a>
+        released
 
-      <div class="tooltip">
-        <p>{repo.description}</p>
+        <div class="tooltip">
+          <p>{repo.description}</p>
 
-        <div class="metrics">
-          <div class="language">
-            <span>&#164;</span>
-            {repo.primaryLanguage.name}
-          </div>
+          <div class="metrics">
+            <div class="language">
+              <span>&#164;</span>
+              {repo.primaryLanguage.name}
+            </div>
 
-          <div class="stars">
-            <span>&#10025;</span>
-            {starsFormatter.format(repo.stargazerCount)}
-          </div>
+            <div class="stars">
+              <span>&#10025;</span>
+              {starsFormatter.format(repo.stargazerCount)}
+            </div>
 
-          <div class="license">
-            <span>&#169;</span>
+            <div class="license">
+              <span>&#169;</span>
 
-            {#if licenseInfo}
-              {#if licenseInfo.spdxId === 'NOASSERTION'}
-                Unspecified
+              {#if licenseInfo}
+                {#if licenseInfo.spdxId === 'NOASSERTION'}
+                  Unspecified
+                {:else}
+                  {licenseInfo.spdxId}
+                {/if}
               {:else}
-                {licenseInfo.spdxId}
+                Unknown
               {/if}
-            {:else}
-              Unknown
-            {/if}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div
-      class="time"
-      title={intlFormat(release.publishedAt, {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        timeZoneName: 'short',
-      })}
-    >
-      {intlFormatDistance(release.publishedAt, new Date())}
+      <div
+        class="time"
+        title={intlFormat(release.publishedAt, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          timeZoneName: 'short',
+        })}
+      >
+        {intlFormatDistance(release.publishedAt, new Date())}
+      </div>
     </div>
   </div>
 
@@ -164,7 +166,6 @@
 
 <style lang="scss">
   .release {
-    margin: 20px 0;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 7px;
@@ -186,19 +187,13 @@
       color: #fff;
       line-height: 13px;
       font-size: 13px;
-
-      span {
-        display: inline-block;
-        margin-right: 2px;
-        color: rgba(255, 255, 0, 0.938);
-      }
     }
 
     .info {
-      .avatar {
-        float: left;
-        margin-right: 10px;
+      display: flex;
+      gap: 10px;
 
+      .avatar {
         img {
           width: 40px;
           height: 40px;
@@ -208,7 +203,6 @@
 
       .repo {
         position: relative;
-        margin-left: 50px;
 
         .tooltip {
           display: none;

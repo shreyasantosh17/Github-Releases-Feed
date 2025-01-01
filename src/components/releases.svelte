@@ -24,8 +24,11 @@
 
 <style lang="scss">
   #releases {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     width: 100%;
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 20px auto;
   }
 </style>
