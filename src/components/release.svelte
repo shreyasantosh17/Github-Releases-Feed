@@ -105,29 +105,31 @@
     {/if}
   </div>
 
-  <div
-    class="description"
-    class:truncated={oversized && !expandDescriptions}
-    bind:this={descriptionDiv}
-  >
-    {#if release.descriptionHTML !== undefined}
-      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-      {@html release.descriptionHTML}
-    {:else}
-      <img
-        src="./loading.svg"
-        alt="Loading..."
-      />
-    {/if}
-  </div>
-
-  {#if oversized && !expandDescriptions}
+  {#if release.descriptionHTML === undefined || release.descriptionHTML !== ''}
     <div
-      class="expand_description"
-      bind:this={expandDescriptionDiv}
+      class="description"
+      class:truncated={oversized && !expandDescriptions}
+      bind:this={descriptionDiv}
     >
-      <button onclick={expandDescription}>Read more</button>
+      {#if release.descriptionHTML !== undefined}
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        {@html release.descriptionHTML}
+      {:else}
+        <img
+          src="./loading.svg"
+          alt="Loading..."
+        />
+      {/if}
     </div>
+
+    {#if oversized && !expandDescriptions}
+      <div
+        class="expand_description"
+        bind:this={expandDescriptionDiv}
+      >
+        <button onclick={expandDescription}>Read more</button>
+      </div>
+    {/if}
   {/if}
 
   {#if showLanguages}
