@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { intlFormatDistance } from 'date-fns'
+  import { intlFormat, intlFormatDistance } from 'date-fns'
 
   import type { ReleaseObj } from 'src/github'
 
@@ -83,7 +83,17 @@
       </div>
     </div>
 
-    <div class="time">
+    <div
+      class="time"
+      title={intlFormat(release.publishedAt, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        timeZoneName: 'short',
+      })}
+    >
       {intlFormatDistance(release.publishedAt, new Date())}
     </div>
   </div>
