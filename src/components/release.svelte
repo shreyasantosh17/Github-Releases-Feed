@@ -61,6 +61,11 @@
         <p>{repo.description}</p>
 
         <div class="metrics">
+          <div class="language">
+            <span>&#164;</span>
+            {repo.primaryLanguage.name}
+          </div>
+
           <div class="stars">
             <span>&#10025;</span>
             {starsFormatter.format(repo.stargazerCount)}
