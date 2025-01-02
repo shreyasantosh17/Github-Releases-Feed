@@ -1,17 +1,12 @@
 <script lang="ts">
+  import { settings } from '../state.svelte'
+
   interface Props {
-    expandDescriptions: boolean
-    showLanguages: boolean
     githubToken: string | null
     logout: () => void
   }
 
-  let {
-    expandDescriptions = $bindable(),
-    showLanguages = $bindable(),
-    logout,
-    githubToken,
-  }: Props = $props()
+  let { logout, githubToken }: Props = $props()
 
   let settingsOpen = $state(false)
 
@@ -38,7 +33,7 @@
       <label>
         <input
           type="checkbox"
-          bind:checked={expandDescriptions}
+          bind:checked={settings.expandDescriptions}
         />
         Expand Descriptions
       </label>
@@ -48,7 +43,7 @@
       <label>
         <input
           type="checkbox"
-          bind:checked={showLanguages}
+          bind:checked={settings.showLanguages}
         />
         Show Languages
       </label>

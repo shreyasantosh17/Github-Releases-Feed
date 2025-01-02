@@ -5,20 +5,14 @@
 
   interface Props {
     allReleases: ReleaseObj[]
-    expandDescriptions: boolean
-    showLanguages: boolean
   }
 
-  const { allReleases, expandDescriptions, showLanguages }: Props = $props()
+  const { allReleases }: Props = $props()
 </script>
 
 <div id="releases">
   {#each allReleases as release (release.id)}
-    <Release
-      {expandDescriptions}
-      {release}
-      {showLanguages}
-    />
+    <Release {release} />
   {/each}
 </div>
 

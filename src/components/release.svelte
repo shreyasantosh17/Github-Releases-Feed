@@ -1,15 +1,15 @@
 <script lang="ts">
   import { intlFormat, intlFormatDistance } from 'date-fns'
 
+  import { settings } from '../state.svelte'
+
   import type { ReleaseObj } from 'src/github'
 
   interface Props {
     release: ReleaseObj
-    expandDescriptions: boolean
-    showLanguages: boolean
   }
 
-  const { release, expandDescriptions, showLanguages }: Props = $props()
+  const { release }: Props = $props()
 
   let descriptionDiv = $state<HTMLDivElement>()
   let expandDescriptionDiv = $state<HTMLDivElement>()
@@ -128,7 +128,7 @@
     <div
       bind:this={descriptionDiv}
       class="description"
-      class:truncated={oversized && !expandDescriptions}
+      class:truncated={oversized && !settings.expandDescriptions}
     >
       {#if release.descriptionHTML !== undefined}
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -141,7 +141,7 @@
       {/if}
     </div>
 
-    {#if oversized && !expandDescriptions}
+    {#if oversized && !settings.expandDescriptions}
       <div
         bind:this={expandDescriptionDiv}
         class="expand_description"
@@ -154,7 +154,7 @@
     {/if}
   {/if}
 
-  {#if showLanguages}
+  {#if settings.showLanguages}
     <div class="meta">
       {#each repo.languages.nodes as languageNode (languageNode.id)}
         {@const secondary = languageNode.id !== repo.primaryLanguage.id}
