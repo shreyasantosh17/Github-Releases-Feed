@@ -27,7 +27,9 @@ export default eslintTS.config(
       files: ['**/*.{js,ts,svelte}'],
     })),
 
-    ...eslintSvelte.configs['flat/recommended'].map((config) => ({
+    ...eslintSvelte.configs.base,
+
+    ...eslintSvelte.configs.recommended.map((config) => ({
       ...config,
       files: ['**/*.svelte'],
     })),
@@ -40,7 +42,7 @@ export default eslintTS.config(
       files: ['**/*.{js,ts,svelte}'],
     },
 
-    ...eslintSvelte.configs['flat/prettier'].map((config) => ({
+    ...eslintSvelte.configs.prettier.map((config) => ({
       ...config,
       files: ['**/*.svelte'],
     })),
@@ -74,14 +76,13 @@ export default eslintTS.config(
       'no-var': 'error',
       'object-shorthand': 'error',
       'prefer-arrow-callback': 'error',
-      'prefer-const': 'error',
       'prefer-object-spread': 'error',
       'prefer-rest-params': 'error',
       'prefer-spread': 'error',
       'prefer-template': 'error',
-      // "require-atomic-updates": "error",
+      'require-atomic-updates': 'error',
 
-      // Disable ESLint Rules (TS versions below)
+      // Disable ESLint Rules (TS/Svelte versions below)
       'consistent-return': 'off',
       'default-param-last': 'off',
       'no-dupe-class-members': 'off',
@@ -91,6 +92,7 @@ export default eslintTS.config(
       'no-restricted-imports': 'off',
       'no-shadow': 'off',
       'no-use-before-define': 'off',
+      'prefer-const': 'off',
 
       // Enable TSLint Rules
       '@typescript-eslint/consistent-return': 'error',
@@ -113,7 +115,8 @@ export default eslintTS.config(
         },
       ],
       '@typescript-eslint/no-shadow': 'error',
-      '@typescript-eslint/no-unnecessary-parameter-property-assignment': 'error',
+      '@typescript-eslint/no-unnecessary-parameter-property-assignment':
+        'error',
       '@typescript-eslint/no-unnecessary-qualifier': 'error',
       '@typescript-eslint/no-useless-empty-export': 'error',
       '@typescript-eslint/prefer-enum-initializers': 'error',
@@ -127,6 +130,9 @@ export default eslintTS.config(
           requireDefaultForNonUnion: true,
         },
       ],
+
+      // Enable Svelte Rules
+      'svelte/prefer-const': 'error',
 
       // Override TSLint Rules
       '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
@@ -148,17 +154,6 @@ export default eslintTS.config(
           allowNumber: true,
         },
       ],
-
-      // Disable TSLint Rules
-      // '@typescript-eslint/consistent-type-definitions': 'off',
-      // '@typescript-eslint/no-unnecessary-condition': 'off',
-      // '@typescript-eslint/no-unsafe-argument': 'off',
-      // '@typescript-eslint/no-unsafe-assignment': 'off',
-      // '@typescript-eslint/no-unsafe-call': 'off',
-      // '@typescript-eslint/no-unsafe-member-access': 'off',
-      // '@typescript-eslint/no-unsafe-return': 'off',
-      // '@typescript-eslint/prefer-nullish-coalescing': 'off',
-      // '@typescript-eslint/strict-boolean-expressions': 'off',
     },
   },
 
@@ -167,12 +162,11 @@ export default eslintTS.config(
   //
 
   {
+    files: ['**/*.{js,ts}'],
     languageOptions: {
       parserOptions: {
-        project: true,
-        tsconfigRootDir: import.meta.dirname,
+        projectService: true,
         parser: eslintTS.parser,
-        extraFileExtensions: ['.svelte'],
       },
     },
   },
@@ -182,7 +176,9 @@ export default eslintTS.config(
     languageOptions: {
       parser: svelteParser,
       parserOptions: {
+        projectService: true,
         parser: eslintTS.parser,
+        extraFileExtensions: ['.svelte'],
       },
       globals: {
         ...globals.browser,
