@@ -132,7 +132,26 @@ export default eslintTS.config(
       ],
 
       // Enable Svelte Rules
+      'svelte/button-has-type': 'error',
+      'svelte/no-dom-manipulating': 'error',
+      'svelte/no-dupe-on-directives': 'error',
+      'svelte/no-dupe-use-directives': 'error',
+      'svelte/no-inline-styles': 'error',
+      'svelte/no-inspect': 'error',
+      'svelte/no-reactive-functions': 'error',
+      'svelte/no-reactive-literals': 'error',
+      'svelte/no-reactive-reassign': 'error',
+      'svelte/no-svelte-internal': 'error',
+      'svelte/no-target-blank': 'error',
+      'svelte/no-unused-class-name': 'error',
+      'svelte/no-useless-children-snippet': 'error',
+      'svelte/no-useless-mustaches': 'error',
+      'svelte/prefer-class-directive': 'error',
       'svelte/prefer-const': 'error',
+      'svelte/require-each-key': 'error',
+      'svelte/require-store-reactive-access': 'error',
+      'svelte/sort-attributes': 'error',
+      'svelte/valid-each-key': 'error',
 
       // Override TSLint Rules
       '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],

@@ -15,8 +15,8 @@
 <div id="releases">
   {#each allReleases as release (release.id)}
     <Release
-      {release}
       {expandDescriptions}
+      {release}
       {showLanguages}
     />
   {/each}

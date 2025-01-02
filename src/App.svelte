@@ -242,10 +242,10 @@
 </script>
 
 <Settings
-  bind:expandDescriptions
-  bind:showLanguages
   {githubToken}
   {logout}
+  bind:expandDescriptions
+  bind:showLanguages
 />
 
 {#if githubToken}

@@ -5,18 +5,26 @@
   }
 
   const { loading, progress }: Props = $props()
+
+  let progressSpan = $state<HTMLSpanElement>()
+
+  $effect(() => {
+    if (!progressSpan) return
+
+    progressSpan.style.width = `${progress * 100}%`
+  })
 </script>
 
 {#if loading}
   {#if progress > 0}
     <div id="progress">
-      <span style="width: {progress * 100}%;"></span>
+      <span bind:this={progressSpan}></span>
     </div>
   {:else}
     <div id="loading">
       <img
-        src="./loading.svg"
         alt="Loading..."
+        src="./loading.svg"
       />
     </div>
   {/if}

@@ -21,10 +21,13 @@
 </script>
 
 <div id="settings_btn">
-  <button onclick={toggleSettings}>
+  <button
+    onclick={toggleSettings}
+    type="button"
+  >
     <img
-      src="./gear.svg"
       alt="Settings"
+      src="./gear.svg"
     /></button
   >
 </div>
@@ -57,7 +60,8 @@
           onclick={(): void => {
             logout()
             toggleSettings()
-          }}>Logout</button
+          }}
+          type="button">Logout</button
         >
       </div>
     {/if}

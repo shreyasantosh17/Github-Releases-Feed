@@ -11,16 +11,17 @@
 <div id="login">
   <div>
     <input
-      type="text"
       placeholder="github_pat_..."
+      type="text"
       bind:value={inputValue}
     />
 
     <button
+      disabled={!inputValue}
       onclick={(): void => {
         login(inputValue)
       }}
-      disabled={!inputValue}>Load</button
+      type="button">Load</button
     >
   </div>
 
@@ -81,6 +82,7 @@
       <p>
         This service is also open-sourced, available <a
           href="https://github.com/KieranP/Github-Releases-Feed"
+          rel="noopener noreferrer"
           target="_blank">here</a
         >. So you can examine exactly what the service does should you continue
         to have questions about security. You can download and run the service
@@ -97,6 +99,7 @@
       <p>
         Start by creating a <a
           href="https://github.com/settings/personal-access-tokens/new"
+          rel="noopener noreferrer"
           target="_blank">Fine-grained Personal Access Token</a
         >. Set whatever value you want for the token name and expiration. Under
         "Permissions > Account permissions > Starring", set that permission to

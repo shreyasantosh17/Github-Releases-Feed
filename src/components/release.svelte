@@ -42,9 +42,9 @@
   <div class="info">
     <div class="avatar">
       <img
-        src={owner.avatarUrl}
         alt="Avatar"
         loading="lazy"
+        src={owner.avatarUrl}
       />
     </div>
 
@@ -52,6 +52,7 @@
       <div class="repo">
         <a
           href={repo.url}
+          rel="noopener noreferrer"
           target="_blank"
         >
           {owner.login}/{repo.name}
@@ -62,17 +63,17 @@
           <p>{repo.description}</p>
 
           <div class="metrics">
-            <div class="language">
+            <div>
               <span>&#164;</span>
               {repo.primaryLanguage.name}
             </div>
 
-            <div class="stars">
+            <div>
               <span>&#10025;</span>
               {starsFormatter.format(repo.stargazerCount)}
             </div>
 
-            <div class="license">
+            <div>
               <span>&#169;</span>
 
               {#if licenseInfo}
@@ -108,6 +109,7 @@
   <div class="name">
     <a
       href={release.url}
+      rel="noopener noreferrer"
       target="_blank">{release.name}</a
     >
 
@@ -124,34 +126,37 @@
 
   {#if release.descriptionHTML === undefined || release.descriptionHTML !== ''}
     <div
+      bind:this={descriptionDiv}
       class="description"
       class:truncated={oversized && !expandDescriptions}
-      bind:this={descriptionDiv}
     >
       {#if release.descriptionHTML !== undefined}
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html release.descriptionHTML}
       {:else}
         <img
-          src="./loading.svg"
           alt="Loading..."
+          src="./loading.svg"
         />
       {/if}
     </div>
 
     {#if oversized && !expandDescriptions}
       <div
-        class="expand_description"
         bind:this={expandDescriptionDiv}
+        class="expand_description"
       >
-        <button onclick={expandDescription}>Read more</button>
+        <button
+          onclick={expandDescription}
+          type="button">Read more</button
+        >
       </div>
     {/if}
   {/if}
 
   {#if showLanguages}
     <div class="meta">
-      {#each repo.languages.nodes as languageNode}
+      {#each repo.languages.nodes as languageNode (languageNode.id)}
         {@const secondary = languageNode.id !== repo.primaryLanguage.id}
         <div
           class="pill lang"
